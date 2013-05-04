@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="UTF-8">
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/jquery-1.8.3.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+	    $(function(){
+		    var socket = io.connect('http://localhost:3000');
+		    $('.btn').click(function(){
+			    var val = $('#siteName').val()
+			    ,	d = new Date()
+			    ,	name = d.getFullYear()+''+d.getMonth()+1+''+d.getDate()+''+d.getDay()+''+d.getHours()+''+d.getMinutes()+''+d.getSeconds();
+			    socket.emit('url', {url:val, name:name});
+			    $('#loadImage').empty().append('<img id="loadImg" src="/images/ajax-loader.gif" />');
+			    return false;
+		    });
+		    
+		    socket.on('image', function(data){
+			    $('#loadImage').empty().append('<img id="loadImg" src="'+data+'" />');
+		    });
+	    });
+    </script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <form name=myText>
+		<input id="siteName" type="text" name=siteName value="" style="width:300px;"><button class="btn">capture!</button>
+	</form>
+	<div id="loadImage">
+		urlを入力してcapture!
+	</div>
+  </body>
+</html>
